@@ -10,6 +10,7 @@ import {
 import MainWeather from "../components/MainWeather";
 import { fetchWeather } from "../services/api";
 import Header from "../components/Header";
+import WeatherInfo from "../components/WeatherInfo";
 
 const HomeScreen = () => {
   const [data, setData] = useState(null);
@@ -73,10 +74,17 @@ const HomeScreen = () => {
         }
         data={[data]}
         renderItem={({ item }) => (
-          <MainWeather
-            temperature={item.current.temp_c}
-            conditions={item.current.condition.text}
-          />
+          <View>
+            <MainWeather
+              temperature={item.current.temp_c}
+              conditions={item.current.condition.text}
+            />
+            <WeatherInfo
+              precipitation={item.current.precip_in}
+              humidity={item.current.humidity}
+              windSpeed={item.current.wind_kph}
+            />
+          </View>
         )}
         keyExtractor={(item) => item.location.name}
       />

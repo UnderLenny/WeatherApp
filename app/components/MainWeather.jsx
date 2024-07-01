@@ -3,10 +3,7 @@ import { Image, View, Text } from "react-native";
 
 function MainWeather({ temperature, conditions }) {
   return (
-    <View
-      className="flex items-center"
-      style={{ paddingTop: 79, paddingLeft: 7 }}
-    >
+    <View className="flex items-center pt-1 pl-1">
       <Image source={require("./../../assets/sun.png")} />
       <Text
         className={"text-white"}

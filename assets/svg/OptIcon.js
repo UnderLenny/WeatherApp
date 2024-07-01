@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { G, Path, Defs, ClipPath } from "react-native-svg";
 
-function SvgComponent(props) {
+function OptIcon(props) {
   return (
     <Svg
       width={27}
@@ -26,4 +26,4 @@ function SvgComponent(props) {
   );
 }
 
-export default SvgComponent;
+export default OptIcon;
