@@ -1,15 +1,35 @@
 import axios from "axios";
 import { API_KEY, BASE_URL } from "@env";
+import { format } from "date-fns";
 
-export const fetchWeather = async (city) => {
+const date = format(new Date(), "yyyy-MM-dd");
+
+export const fetchWeather = async (city, requiredTime) => {
   try {
-    const response = await axios.get(`${BASE_URL}/current.json`, {
+    const currentWeatherResponse = await axios.get(`${BASE_URL}/current.json`, {
       params: {
-        key: "2a90099cc6a24f89a7d65054243006",
+        key: API_KEY,
         q: city,
       },
     });
-    return response.data;
+
+    const weatherTimeRangeResponse = await axios.get(
+      `${BASE_URL}/forecast.json`,
+      {
+        params: {
+          key: API_KEY,
+          q: city,
+          days: 1,
+          dt: date,
+          hour: requiredTime,
+        },
+      }
+    );
+
+    return {
+      current: currentWeatherResponse.data,
+      forecast: weatherTimeRangeResponse.data,
+    };
   } catch (err) {
     console.error(err);
   }

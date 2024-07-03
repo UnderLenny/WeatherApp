@@ -6,8 +6,8 @@ import WindSpeedIcon from "../../assets/svg/WindSpeedIcon";
 
 const WeatherInfo = ({ precipitation, humidity, windSpeed }) => {
   return (
-    <View className="bg-[#104084]/30 rounded-[20px] items-center mx-10 mt-10 mb-5 ">
-      <View className={"flex-row gap-10 items-center p-1.5 "}>
+    <View className="bg-[#104084]/30 rounded-[20px] items-center mx-10 mt-10 mb-5 p-3">
+      <View className={"flex-row gap-10 items-center"}>
         <View className={"flex-row gap-0.5 items-center "}>
           <PrecipitationIcon />
           <Text className="text-white text-[14px] font-semibold">

@@ -11,6 +11,7 @@ import MainWeather from "../components/MainWeather";
 import { fetchWeather } from "../services/api";
 import Header from "../components/Header";
 import WeatherInfo from "../components/WeatherInfo";
+import TodayInfo from "../components/TodayInfo";
 
 const HomeScreen = () => {
   const [data, setData] = useState(null);
@@ -19,10 +20,10 @@ const HomeScreen = () => {
     ArialRoundedMTBold: require("../../assets/fonts/arialroundedmtbold.ttf"),
   });
 
-  const getWeather = async () => {
+  const getWeather = async (time) => {
     setIsLoading(true);
     try {
-      const weatherData = await fetchWeather("Kemerovo");
+      const weatherData = await fetchWeather("Kemerovo", 6);
       setData(weatherData);
     } catch (err) {
       console.error(err);
@@ -62,12 +63,12 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header currentCity={data?.location?.name} />
+      <Header currentCity={data?.current?.location?.name || "Unknown"} />
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
-            onRefresh={getWeather}
+            onRefresh={() => getWeather(time)}
             colors={["#fff"]}
             tintColor="#fff"
           />
@@ -76,17 +77,25 @@ const HomeScreen = () => {
         renderItem={({ item }) => (
           <View>
             <MainWeather
-              temperature={item.current.temp_c}
-              conditions={item.current.condition.text}
+              temperature={item.current?.current?.temp_c || "N/A"}
+              conditions={item.current?.current?.condition?.text || "N/A"}
             />
             <WeatherInfo
-              precipitation={item.current.precip_in}
-              humidity={item.current.humidity}
-              windSpeed={item.current.wind_kph}
+              precipitation={item.current?.current?.cloud || "N/A"}
+              humidity={item.current?.current?.humidity || "N/A"}
+              windSpeed={item.current?.current?.wind_kph || "N/A"}
+            />
+            <TodayInfo
+              currentData={
+                item.forecast?.forecast?.forecastday[0]?.date || "N/A"
+              }
+              weatherInSixAm={
+                item?.forecast?.forecast?.forecastday[0]?.hour[0]?.temp_c
+              }
             />
           </View>
         )}
-        keyExtractor={(item) => item.location.name}
+        keyExtractor={(item) => item.current?.location?.name}
       />
     </View>
   );
