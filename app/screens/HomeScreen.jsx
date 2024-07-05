@@ -16,14 +16,15 @@ import TodayInfo from "../components/TodayInfo";
 const HomeScreen = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentCity, setCurrentCity] = useState("Kemerovo");
   const [fontsLoaded] = useFonts({
     ArialRoundedMTBold: require("../../assets/fonts/arialroundedmtbold.ttf"),
   });
 
-  const getWeather = async (time) => {
+  const getWeather = async (city = currentCity) => {
     setIsLoading(true);
     try {
-      const weatherData = await fetchWeather("Kemerovo", 6);
+      const weatherData = await fetchWeather(city);
       setData(weatherData);
     } catch (err) {
       console.error(err);
@@ -35,7 +36,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     getWeather();
-  }, []);
+  }, [currentCity]);
 
   if (!fontsLoaded || isLoading || !data) {
     return (
@@ -63,12 +64,12 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Header currentCity={data?.current?.location?.name || "Unknown"} />
+      <Header currentCity={currentCity} onCitySelect={setCurrentCity} />
       <FlatList
         refreshControl={
           <RefreshControl
             refreshing={isLoading}
-            onRefresh={() => getWeather(time)}
+            onRefresh={() => getWeather()}
             colors={["#fff"]}
             tintColor="#fff"
           />
@@ -86,12 +87,11 @@ const HomeScreen = () => {
               windSpeed={item.current?.current?.wind_kph || "N/A"}
             />
             <TodayInfo
-              currentData={
-                item.forecast?.forecast?.forecastday[0]?.date || "N/A"
-              }
-              weatherInSixAm={
-                item?.forecast?.forecast?.forecastday[0]?.hour[0]?.temp_c
-              }
+              currentData={item.forecast[0]?.time.split(" ")[0]}
+              weatherInSixAm={item.forecast[0]?.temp_c || "N/A"}
+              weatherInTwelvePm={item.forecast[1]?.temp_c || "N/A"}
+              weatherInSixPm={item.forecast[2]?.temp_c || "N/A"}
+              weatherInMidnight={item.forecast[3]?.temp_c || "N/A"}
             />
           </View>
         )}
